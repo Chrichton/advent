@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Advent.Generate.Day do
   use Igniter.Mix.Task
 
-  @example "mix advent.generate.day --example arg"
+  @example "mix advent.generate.day 1 2024"
 
   @shortdoc "A short description of your task"
   @moduledoc """
@@ -33,7 +33,7 @@ defmodule Mix.Tasks.Advent.Generate.Day do
       # An example invocation
       example: @example,
       # a list of positional arguments, i.e `[:file]`
-      positional: [],
+      positional: [{:day, opional: true}, {:year, optional: true}],
       # Other tasks your task composes using `Igniter.compose_task`, passing in the CLI argv
       # This ensures your option schema includes options from nested tasks
       composes: [],
@@ -49,9 +49,53 @@ defmodule Mix.Tasks.Advent.Generate.Day do
   end
 
   @impl Igniter.Mix.Task
-  def igniter(igniter) do
-    # Do your work here and return an updated igniter
+  def igniter(igniter, argv) do
+    {arguments, _argv} = positional_args!(argv)
+
+    day = advent_day(Map.get(arguments, :day))
+    year = advent_year(Map.get(arguments, :year))
+
+    full_day_number = String.pad_leading(Integer.to_string(day), 2, "0")
+
+    day_module_name =
+      Igniter.Project.Module.parse("Advent.Year#{year}.Day#{full_day_number}")
+
     igniter
-    |> Igniter.add_warning("mix advent.generate.day is not yet implemented")
+    |> Igniter.Project.Module.create_module(
+      day_module_name,
+      """
+        def part1(input) do
+          input
+        end
+
+        def part2(input) do
+          input
+        end
+      """
+    )
+  end
+
+  defp advent_day(nil) do
+    {:ok, now} = DateTime.now("Europe/Berlin")
+    now.day
+  end
+
+  defp advent_day(day) when is_binary(day) do
+    case Integer.parse(day) do
+      {day, _} when day in 1..25 ->
+        day
+
+      _ ->
+        raise ArgumentError, "provide a valid day from 1-25"
+    end
+  end
+
+  defp advent_year(nil) do
+    {:ok, now} = DateTime.now("America/New_York")
+    now.year
+  end
+
+  defp advent_year(year) when is_binary(year) do
+    String.to_integer(year)
   end
 end
