@@ -1,9 +1,16 @@
 # Advent
 
+## source
+
 https://www.youtube.com/watch?v=gpaV4bgEG-g&t=68s
 
 https://github.com/mhanberg/advent-of-code-elixir-starter
-**TODO: Add description**
+
+**Creates Tode, Tests and Tasks for Advent of Code**
+
+**Usage:**
+mix Advent.Generate.Day 1 2023
+mix y2023.d01.p1
 
 ## Installation
 
