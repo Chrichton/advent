@@ -82,7 +82,7 @@ defmodule Mix.Tasks.Advent.Generate.Day do
       defmodule #{test_module_name}Test do
         use ExUnit.Case
 
-        import#{day_module_name}
+        import #{day_module_name}
 
         @tag :skip
         test "part1" do
@@ -99,6 +99,7 @@ defmodule Mix.Tasks.Advent.Generate.Day do
 
           assert result
         end
+      end
       """,
       path: Igniter.Code.Module.proper_test_location(test_module_name)
     )
