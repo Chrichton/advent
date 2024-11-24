@@ -1,5 +1,7 @@
 # Advent
 
+https://www.youtube.com/watch?v=gpaV4bgEG-g&t=68s
+
 https://github.com/mhanberg/advent-of-code-elixir-starter
 **TODO: Add description**
 

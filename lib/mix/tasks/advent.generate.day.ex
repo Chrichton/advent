@@ -64,6 +64,12 @@ defmodule Mix.Tasks.Advent.Generate.Day do
       Igniter.Project.Module.parse("Advent.Year#{year}.Day#{full_day_number}Test")
 
     igniter
+    |> Igniter.assign(
+      day_module_name: day_module_name,
+      full_day_number: full_day_number,
+      day: day,
+      year: year
+    )
     |> Igniter.Project.Module.create_module(
       day_module_name,
       """
@@ -102,6 +108,31 @@ defmodule Mix.Tasks.Advent.Generate.Day do
       end
       """,
       path: Igniter.Code.Module.proper_test_location(test_module_name)
+    )
+    |> add_mix_task(1)
+    |> add_mix_task(2)
+  end
+
+  defp add_mix_task(igniter, part) do
+    template_path = Path.expand("templates/day_mix_task.eex")
+
+    part_module_name =
+      Igniter.Project.Module.parse(
+        "Mix.Tasks.Y#{igniter.assigns[:year]}.D#{igniter.assigns[:full_day_number]}.P#{part}"
+      )
+
+    assigns =
+      Keyword.merge(
+        Map.to_list(igniter.assigns),
+        part: part,
+        module_name: part_module_name
+      )
+
+    Igniter.copy_template(
+      igniter,
+      template_path,
+      Igniter.Code.Module.proper_location(part_module_name),
+      assigns
     )
   end
 
