@@ -60,6 +60,9 @@ defmodule Mix.Tasks.Advent.Generate.Day do
     day_module_name =
       Igniter.Project.Module.parse("Advent.Year#{year}.Day#{full_day_number}")
 
+    test_module_name =
+      Igniter.Project.Module.parse("Advent.Year#{year}.Day#{full_day_number}Test")
+
     igniter
     |> Igniter.Project.Module.create_module(
       day_module_name,
@@ -72,6 +75,32 @@ defmodule Mix.Tasks.Advent.Generate.Day do
           input
         end
       """
+    )
+    |> Igniter.Project.Module.create_module(
+      test_module_name,
+      """
+      defmodule #{test_module_name}Test do
+        use ExUnit.Case
+
+        import#{day_module_name}
+
+        @tag :skip
+        test "part1" do
+          input = nil
+          result = part1(input)
+
+          assert result
+        end
+
+        @tag :skip
+        test "part2" do
+          input = nil
+          result = part1(input)
+
+          assert result
+        end
+      """,
+      path: Igniter.Code.Module.proper_test_location(test_module_name)
     )
   end
 
